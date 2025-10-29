@@ -10,10 +10,11 @@ const {
   changePassword,
   removeClient,
   getClients,
+  getClient,
 } = require("../controller/clients");
 
 // 🔹 Бүх харилцагчдыг авах (админ эрхтэй)
-router.route("/").get(protect, authorize("admin"), getClients);
+router.route("/").get(protect, authorize("admin"), getClients).put(protect, updateClientInfo);
 
 // 🔹 Бүртгүүлэх / Нэвтрэх
 router.post("/signup", signUp);
@@ -23,12 +24,11 @@ router.post("/signin", signIn);
 router
   .route("/info")
   .get(protect, clientInfo)
-  .put(protect, updateClientInfo);
 
 // 🔹 Нууц үг солих
 router.put("/change-password", protect, changePassword);
 
 // 🔹 Хэрэглэгч устгах (зөвхөн админ)
-router.delete("/:id", protect, authorize("admin"), removeClient);
+router.get("/:id", protect, authorize("admin"), getClient).delete("/:id", protect, authorize("admin"), removeClient);
 
 module.exports = router;

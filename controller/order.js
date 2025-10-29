@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const asyncHandler = require("../middleware/asyncHandle")
 const MyError = require("../utils/myError");
 const paginateSequelize = require("../utils/paginate-sequelize");
@@ -23,13 +23,19 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
   let order = await req.db.orders.findOne({
     where: { clientId: userId, status: "basket" },
   });
-
+  const now = new Date();
   if (!order) {
     // Шинэ захиалга үүсгэх
     const subtotal = product.price * quantity;
     order = await req.db.orders.create({
       clientId: userId,
       note: "-",
+      order_number: now.getFullYear().toString() +
+        (now.getMonth() + 1).toString().padStart(2, "0") +
+        now.getDate().toString().padStart(2, "0") +
+        now.getHours().toString().padStart(2, "0") +
+        now.getMinutes().toString().padStart(2, "0") +
+        now.getSeconds().toString().padStart(2, "0"),
       total_price: subtotal,
       status: "basket",
     });
@@ -150,6 +156,39 @@ exports.getStatus = asyncHandler(async (req, res, next) => {
     body: { items: order },
   });
 })
+// Төлөгдөөгүй
+exports.getStats = asyncHandler(async (req, res, next) => {
+  const { userId } = req
+  if (!userId) {
+    throw new MyError(`Та эрхгүй байна`, 400)
+  }
+  const statsRaw = await req.db.orders.findAll({
+    attributes: [
+      "status",
+      [Sequelize.fn("SUM", Sequelize.col("total_price")), "total_amount"],
+      [Sequelize.fn("COUNT", Sequelize.col("id")), "total_qty"],
+    ],
+    group: ["status"],
+  });
+
+  // Model instance → plain object
+  const stats = statsRaw.map((item) => item.get({ plain: true }));
+
+  // key-value объект болгон хувиргах
+  const statsObj = {};
+  stats.forEach((item) => {
+    statsObj[item.status] = {
+      total_qty: parseInt(item.total_qty, 10),
+      total_amount: parseFloat(item.total_amount),
+    };
+  });
+
+
+  res.status(200).json({
+    success: true,
+    body: statsObj,
+  });
+})
 exports.getOrders = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 1000;
@@ -189,8 +228,10 @@ exports.getOrders = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    items: orders,
-    pagination,
+    body: {
+      items: orders,
+      pagination,
+    }
   });
 });
 
@@ -209,6 +250,10 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
             model: req.db.product,
             as: "product",
           },
+        },
+         {
+          model: req.db.clients,
+          as: "clients",
         }
       ]
     })

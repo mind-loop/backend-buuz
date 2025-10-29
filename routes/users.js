@@ -16,7 +16,7 @@ router.route("/signin").post(signIn);
 router.route("/update").put(protect, updateUserInfo);
 router
   .route("/info")
-  .get(protect, userInfo);
+  .get(protect, authorize("admin"), userInfo);
   router
   .route("/change-password")
   .put(protect,changePassword);

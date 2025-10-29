@@ -31,11 +31,32 @@ exports.getClients = asyncHandler(async (req, res, next) => {
   const clients = await req.db.clients.findAll(query);
   res.status(200).json({
     success: true,
-    items: clients,
-    pagination,
+    body: {
+      items: clients,
+      pagination
+    },
   });
 });
-
+exports.getClient = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const clients = await req.db.clients.findByPk(id,{
+      include: [{
+      model: req.db.orders,
+      as: "orders",
+      // include: {
+      //   model: req.db.order,
+      //   as: "product",
+      // },
+    }]
+    });
+    if (!clients) {
+        throw new MyError(`${id}  дугаартай бүтээгдэхүүн олдсонгүй`, 404)
+    }
+    res.status(200).json({
+        success: true,
+        body: clients,
+    });
+});
 // =====================
 //  Бүртгүүлэх (Sign Up)
 // =====================

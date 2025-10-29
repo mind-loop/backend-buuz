@@ -9,6 +9,10 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true,
       },
+      order_number: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
       clientId: {
         type: DataTypes.INTEGER(10).UNSIGNED,
         allowNull: false,
@@ -23,7 +27,7 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: 0.0,
       },
       status: {
-        type: DataTypes.ENUM("basket","pending", "processing", "completed", "cancelled"),
+        type: DataTypes.ENUM("basket","pending", "processing", "completed", "done"),
         allowNull: false,
         defaultValue: "basket",
       },

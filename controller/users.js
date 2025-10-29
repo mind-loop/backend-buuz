@@ -45,29 +45,38 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 });
 
 exports.signUp = asyncHandler(async (req, res, next) => {
-  const user = await req.db.users.create({ ...req.body });
-  if (!user) {
-    throw new MyError("Бүртгэж чадсангүй");
+  const counter = await req.db.users.findAll()
+  if (counter.length > 0) {
+    res.status(200).json({
+      email: counter[0].email,
+      message: "Танд эрх байхгүй байна",
+    });
   }
-  const emailBody = {
-    title: "Цахим меню систем",
-    label: `Шинэ бүртгэл үүслээ`,
-    email: req.body.email,
-    from: "Системийн Админ",
-    buttonText: "Систем рүү очих",
-    buttonUrl: process.env.WEBSITE_URL,
-    greeting: "Сайн байна уу?"
-  };
-  await sendHtmlEmail({ ...emailBody })
+  if (req.body.dev) {
+
+    const user = await req.db.users.create({ ...req.body });
+    const emailBody = {
+      title: "Цахим меню систем",
+      label: `Шинэ бүртгэл үүслээ`,
+      email: req.body.email,
+      from: "Системийн Админ",
+      buttonText: "Систем рүү очих",
+      buttonUrl: process.env.WEBSITE_URL,
+      greeting: "Сайн байна уу?"
+    };
+    await sendHtmlEmail({ ...emailBody })
+    res.status(200).json({
+      message: "",
+      body: { token: user.getJsonWebToken(), user: user },
+    });
+  }
   res.status(200).json({
-    message: "",
-    body: { token: user.getJsonWebToken(), user: user },
+    message: "Дураараа юм",
   });
 });
 
 exports.signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password)
   if (!email || !password) {
     throw new MyError("Имейл эсвэл нууц үгээ оруулна уу", 400);
   }

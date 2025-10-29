@@ -22,9 +22,7 @@ const cors = require("cors");
 dotenv.config({ path: "./config/config.env" });
 
 const db = require("./config/db-mysql");
-const { expiredCheckDepartments } = require("./services/cronJobs");
-const checkMongoliaOnly = require("./middleware/checker");
-const { emitWarning } = require("process");
+const checkMongoliaOnly = require("./middleware/checkMongoliaOnly");
 
 const app = express();
 
@@ -54,6 +52,9 @@ db.orders.hasMany(db.order_items, { foreignkey: "orderId", onDelete: "CASCADE" }
 db.order_items.belongsTo(db.orders);
 db.order_items.belongsTo(db.product, { foreignKey: "productId", as: "product" });
 db.product.hasMany(db.order_items, { foreignKey: "productId" });
+
+db.orders.belongsTo(db.clients, { foreignKey: "clientId", as: "clients" });
+db.clients.hasMany(db.orders, { foreignKey: "clientId" });
 db.sequelize
   .sync()
   .then((result) => {

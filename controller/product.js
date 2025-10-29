@@ -56,8 +56,10 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
     });
     res.status(200).json({
         success: true,
-        items: product,
-        pagination,
+        body: {
+            items: product,
+            pagination
+        },
     });
 });
 exports.getProduct = asyncHandler(async (req, res, next) => {
@@ -77,42 +79,52 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
     });
 });
 exports.updateProduct = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  // 1️⃣ Тухайн бүтээгдэхүүнийг олно
-  const product = await req.db.product.findByPk(id);
+    // 1️⃣ Тухайн бүтээгдэхүүнийг олно
+    const product = await req.db.product.findByPk(id);
 
-  if (!product) {
-    throw new MyError("Бүтээгдэхүүн олдсонгүй", 404);
-  }
+    if (!product) {
+        throw new MyError("Бүтээгдэхүүн олдсонгүй", 404);
+    }
 
-  // 2️⃣ Өгөгдлийг шинэчилнэ
-  await product.update(req.body);
+    // 2️⃣ Өгөгдлийг шинэчилнэ
+    await product.update(req.body);
 
-  // 3️⃣ Амжилттай хариу буцаана
-  res.status(200).json({
-    success: true,
-    message: "Бүтээгдэхүүн амжилттай шинэчлэгдлээ",
-    product,
-  });
+    // 3️⃣ Амжилттай хариу буцаана
+    res.status(200).json({
+        success: true,
+        message: "Бүтээгдэхүүн амжилттай шинэчлэгдлээ",
+        product,
+    });
 });
 
 exports.deleteProduct = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-  // 1️⃣ Тухайн бүтээгдэхүүнийг олно
-  const product = await req.db.product.findByPk(id);
+    // 1️⃣ Тухайн бүтээгдэхүүнийг олно
+    const product = await req.db.product.findByPk(id);
 
-  if (!product) {
-    throw new MyError("Бүтээгдэхүүн олдсонгүй", 404);
+    if (!product) {
+        throw new MyError("Бүтээгдэхүүн олдсонгүй", 404);
+    }
+
+    // 2️⃣ Өгөгдлийг шинэчилнэ
+    await product.destroy();
+
+    // 3️⃣ Амжилттай хариу буцаана
+    res.status(200).json({
+        success: true,
+        message: "Бүтээгдэхүүн амжилттай устгагдлаа",
+    });
+});
+exports.getProductStats = asyncHandler(async (req, res, next) => {
+  const { userId } = req
+  if (!userId) {
+    throw new MyError(`Та эрхгүй байна`, 400)
   }
 
-  // 2️⃣ Өгөгдлийг шинэчилнэ
-  await product.destroy();
-
-  // 3️⃣ Амжилттай хариу буцаана
   res.status(200).json({
     success: true,
-    message: "Бүтээгдэхүүн амжилттай устгагдлаа",
   });
-});
+})
