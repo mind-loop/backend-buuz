@@ -65,7 +65,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   if (!client) throw new MyError("Бүртгэл амжилтгүй боллоо", 400);
 
   const emailBody = {
-    title: "Цахим меню систем",
+    title: "Бууз захиалгын систем",
     label: `Таны бүртгэл амжилттай үүслээ 👏`,
     email: req.body.email,
     from: "Системийн Админ",
@@ -161,7 +161,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
   await req.db.clients.update({ password: hashed }, { where: { id } });
 
   const emailBody = {
-    title: "Цахим меню систем",
+    title: "Бууз захиалгын систем",
     label: `Таны нууц үг амжилттай шинэчлэгдлээ 🔐`,
     email: req.email,
     from: "Системийн Админ",

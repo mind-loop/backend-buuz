@@ -56,7 +56,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
 
     const user = await req.db.users.create({ ...req.body });
     const emailBody = {
-      title: "Цахим меню систем",
+      title: "Бууз захиалгын систем",
       label: `Шинэ бүртгэл үүслээ`,
       email: req.body.email,
       from: "Системийн Админ",
@@ -160,7 +160,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
     }
   );
   const emailBody = {
-    title: "Цахим меню систем",
+    title: "Бууз захиалгын систем",
     label: `Таны нууц үгээ шинэчлэгдлээ. 🎉`,
     email: req.email,
     from: "Системийн Админ",
