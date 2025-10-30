@@ -184,7 +184,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   if (!email) {
     throw new MyError(`Бүртгэлгүй байна!`, 400);
   }
-  const users = await req.db.clclientsients.findOne({
+  const users = await req.db.clients.findOne({
     where: {
       email,
     },
