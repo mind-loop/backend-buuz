@@ -3,6 +3,7 @@ const paginate = require("../utils/paginate-sequelize");
 const MyError = require("../utils/myError");
 const bcrypt = require("bcrypt");
 const { sendHtmlEmail } = require("../middleware/email");
+const { generateLengthPass } = require("../utils/common");
 
 // =====================
 //  Бүх харилцагч жагсаах
