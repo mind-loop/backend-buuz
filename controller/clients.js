@@ -180,11 +180,10 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   const password = generateLengthPass(8)
-  console.log(password)
   if (!email) {
     throw new MyError(`Бүртгэлгүй байна!`, 400);
   }
-  const users = await req.db.clients.findOne({
+  const users = await req.db.clclientsients.findOne({
     where: {
       email,
     },
