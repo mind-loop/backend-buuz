@@ -11,6 +11,7 @@ const {
   removeClient,
   getClients,
   getClient,
+  forgotPassword,
 } = require("../controller/clients");
 
 // 🔹 Бүх харилцагчдыг авах (админ эрхтэй)
@@ -27,6 +28,7 @@ router
 
 // 🔹 Нууц үг солих
 router.put("/change-password", protect, changePassword);
+router.put("/forgot-password", forgotPassword);
 
 // 🔹 Хэрэглэгч устгах (зөвхөн админ)
 router.get("/:id", protect, authorize("admin"), getClient).delete("/:id", protect, authorize("admin"), removeClient);
