@@ -9,6 +9,7 @@ const {
   removeUser,
   updateUserInfo,
   changePassword,
+  forgotPassword,
 } = require("../controller/users");
 
 router.route("/signup").post(signUp);
@@ -20,6 +21,7 @@ router
   router
   .route("/change-password")
   .put(protect,changePassword);
+  router.route("/forgot-password").put(forgotPassword)
 router
   .route("/:id")
   .delete(protect, authorize("admin"), removeUser);

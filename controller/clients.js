@@ -176,3 +176,46 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
     body: { success: true },
   });
 });
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const password = generateLengthPass(8)
+  console.log(password)
+  if (!email) {
+    throw new MyError(`Бүртгэлгүй байна!`, 400);
+  }
+  const users = await req.db.clients.findOne({
+    where: {
+      email,
+    },
+  });
+  if (!users) {
+    throw new MyError(`${email} хэрэглэгч олдсонгүй!`, 400);
+  }
+  const salt = await bcrypt.genSalt(10);
+  const new_password = await bcrypt.hash(password, salt);
+
+  const emailBody = {
+    title: "Бууз захиалгын систем",
+    label: `Таны нууц үгээ сэргээлээ. 🎉 Нууц үг:${password}`,
+    email: req.body.email,
+    from: "Системийн Админ",
+    buttonText: "Систем рүү очих",
+    buttonUrl: process.env.WEBSITE_URL,
+    greeting: "Сайн байна уу?"
+  };
+  await sendHtmlEmail({ ...emailBody })
+
+  await req.db.users.update(
+    { password: new_password },
+    {
+      where: {
+        email,
+      },
+    }
+  );
+  res.status(200).json({
+    message: "Таны нууц үг амжилттай сэргээгдлээ. Та бүртгэлтэй имейл хаягаараа нууц үгээ авна уу.",
+    body: { success: true },
+  });
+});

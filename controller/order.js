@@ -138,11 +138,16 @@ exports.getOrderBasket = asyncHandler(async (req, res, next) => {
 // Төлөгдөөгүй
 exports.getStatus = asyncHandler(async (req, res, next) => {
   const { userId } = req
+  console.log(req.role)
   if (!userId) {
     throw new MyError(`Та эрхгүй байна`, 400)
   }
+  const whereCondition = {
+    status: req.body.status,
+    ...(req.role !== "admin" && { clientId: req.userId })
+  };
   const order = await req.db.orders.findAll({
-    where: { status: req.body.status, clientId: userId }, include: [{
+    where: whereCondition, include: [{
       model: req.db.order_items,
       as: "order_items",
       include: {
@@ -251,7 +256,7 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
             as: "product",
           },
         },
-         {
+        {
           model: req.db.clients,
           as: "clients",
         }
@@ -306,3 +311,4 @@ exports.removeOrderItem = asyncHandler(async (req, res, next) => {
     message: "Бараа сагснаас устгагдлаа",
   });
 });
+
