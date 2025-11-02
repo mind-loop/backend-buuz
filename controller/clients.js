@@ -91,7 +91,7 @@ exports.signIn = asyncHandler(async (req, res, next) => {
     throw new MyError("Имэйл болон нууц үгээ оруулна уу", 400);
 
   const client = await req.db.clients.findOne({ where: { email } });
-  if (!client) throw new MyError("Имэйл эсвэл нууц үг буруу байна", 400);
+  if (!client) throw new MyError("Имэйл буруу байна", 400);
 
   const ok = await client.CheckPass(password);
   if (!ok) throw new MyError("Имэйл эсвэл нууц үг буруу байна", 400);
@@ -194,7 +194,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   }
   const salt = await bcrypt.genSalt(10);
   const new_password = await bcrypt.hash(password, salt);
-
   const emailBody = {
     title: "Бууз захиалгын систем",
     label: `Таны нууц үгээ сэргээлээ. 🎉 Нууц үг:${password}`,
@@ -206,7 +205,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   };
   await sendHtmlEmail({ ...emailBody })
 
-  await req.db.users.update(
+  await req.db.clients.update(
     { password: new_password },
     {
       where: {
