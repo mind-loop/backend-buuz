@@ -1,34 +1,35 @@
-const express = require("express");
-const dotenv = require("dotenv");
-var path = require("path");
-const fileUpload = require("express-fileupload");
-var rfs = require("rotating-file-stream");
-const colors = require("colors");
-const errorHandler = require("./middleware/error");
-var morgan = require("morgan");
-const logger = require("./middleware/logger");
-// Router оруулж ирэх
-const userRoutes = require("./routes/users");
-const clientRoutes = require("./routes/client");
-const productRoutes = require("./routes/product")
-const orderRoutes=require("./routes/order")
-const successRoutes = require("./routes/success");
-const injectDb = require("./middleware/injectDb");
-const cors = require("cors");
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import fileUpload from "express-fileupload";
+import rfs from "rotating-file-stream";
+import colors from "colors";
+import errorHandler from "./middleware/error.js";
+import morgan from "morgan";
+import logger from "./middleware/logger.js";
+
+// Router-ууд
+import userRoutes from "./routes/users.js";
+import clientRoutes from "./routes/client.js";
+import productRoutes from "./routes/product.js";
+import orderRoutes from "./routes/order.js";
+import successRoutes from "./routes/success.js";
+
+import injectDb from "./middleware/injectDb.js";
+import cors from "cors";
 // Аппын тохиргоог process.env рүү ачаалах
-
-
 
 dotenv.config({ path: "./config/config.env" });
 
-const db = require("./config/db-mysql");
-const checkMongoliaOnly = require("./middleware/checkMongoliaOnly");
-
+import db from "./config/db-mysql.js";
+import { fileURLToPath } from "url";
 const app = express();
-
+// __dirname үүсгэх
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // create a write stream (in append mode)
-var accessLogStream = rfs.createStream("access.log", {
-  interval: "1d", // rotate daily
+const accessLogStream = rfs.createStream("access.log", {
+  interval: "1d", // өдөр тутам rotate
   path: path.join(__dirname, "log"),
 });
 

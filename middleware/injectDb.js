@@ -1,4 +1,6 @@
-module.exports = (db) => (req, res, next) => {
-  req.db = db;
-  next();
+export default (db) => {
+  return (req, res, next) => {
+    req.db = db;
+    next();
+  };
 };

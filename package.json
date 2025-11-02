@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is Mysql+ExpressJS+React+NodeJS",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "NODE_ENV=production node server",
     "dev": "nodemon server"
@@ -17,7 +18,7 @@
     "cuid": "^3.0.0",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
-    "dotenv": "^8.2.0",
+    "dotenv": "^17.2.3",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "express-fileupload": "^1.1.7-alpha.3",

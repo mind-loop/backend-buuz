@@ -1,8 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const { protect, authorize } = require("../middleware/protect");
+import express from "express";
+import { protect, authorize } from "../middleware/protect.js";
 
-const {
+const router = express.Router();
+
+import {
   signUp,
   signIn,
   clientInfo,
@@ -12,7 +13,7 @@ const {
   getClients,
   getClient,
   forgotPassword,
-} = require("../controller/clients");
+} from "../controller/clients.js";
 
 // 🔹 Бүх харилцагчдыг авах (админ эрхтэй)
 router.route("/").get(protect, authorize("admin"), getClients).put(protect, updateClientInfo);
@@ -33,4 +34,4 @@ router.put("/forgot-password", forgotPassword);
 // 🔹 Хэрэглэгч устгах (зөвхөн админ)
 router.get("/:id", protect, authorize("admin"), getClient).delete("/:id", protect, authorize("admin"), removeClient);
 
-module.exports = router;
+export default router;

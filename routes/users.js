@@ -1,8 +1,8 @@
-const express = require("express");
+import  express from "express";
 const router = express.Router();
-const { protect, authorize } = require("../middleware/protect");
+import { protect, authorize } from "../middleware/protect.js"
 
-const {
+import  {
   signUp,
   signIn,
   userInfo,
@@ -10,7 +10,7 @@ const {
   updateUserInfo,
   changePassword,
   forgotPassword,
-} = require("../controller/users");
+} from "../controller/users.js";
 
 router.route("/signup").post(signUp);
 router.route("/signin").post(signIn);
@@ -25,4 +25,4 @@ router
 router
   .route("/:id")
   .delete(protect, authorize("admin"), removeUser);
-module.exports = router;
+export default router;

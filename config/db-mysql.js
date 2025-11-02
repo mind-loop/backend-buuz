@@ -1,4 +1,13 @@
-const Sequelize = require("sequelize");
+import SequelizePkg from "sequelize";
+const { Sequelize,Op } = SequelizePkg;
+import usersModel from "../models/users.js";
+import clientsModel from "../models/clients.js";
+import productModel from "../models/product.js";
+import orderModel from "../models/order.js";
+import orderItemsModel from "../models/ordetItems.js";
+
+import dotenv from "dotenv";
+dotenv.config({ path: "./config/config.env" });
 
 var db = {};
 
@@ -9,7 +18,7 @@ const sequelize = new Sequelize(
   {
     host: process.env.SEQUELIZE_HOST,
     port: process.env.SEQUELIZE_PORT,
-    dialect: process.env.SEQUELIZE_DIALECT,
+    dialect: process.env.SEQUELIZE_DIALECT || "mysql",
     define: {
       freezeTableName: true,
     },
@@ -19,17 +28,16 @@ const sequelize = new Sequelize(
       acquire: 60000,
       idle: 10000,
     },
-
-    operatorAliases: false,
+    
+eratorAliases: false,
   }
 );
-
 const models = [
-  require("../models/users"),
-  require("../models/clients"),
-  require("../models/product"),
-  require("../models/order"),
-  require("../models/ordetItems"),
+  usersModel,
+  clientsModel,
+  productModel,
+  orderModel,
+  orderItemsModel,
 ];
 
 models.forEach((model) => {
@@ -39,5 +47,6 @@ models.forEach((model) => {
 });
 
 db.sequelize = sequelize;
-
-module.exports = db;
+db.Sequelize = Sequelize;
+db.Op = Op;
+export default db;

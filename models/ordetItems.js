@@ -1,5 +1,5 @@
 /* models/orderItem.js */
-module.exports = (sequelize, DataTypes) => {
+export default function (sequelize, DataTypes) {
   const OrderItems = sequelize.define(
     "order_items",
     {

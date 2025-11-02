@@ -1,5 +1,4 @@
-const geoip = require("geoip-lite");
-
+import geoip from "geoip-lite";
 function checkMongoliaOnly(req, res, next) {
   try {
     // Клиентийн IP хаягийг авна
@@ -53,4 +52,4 @@ function checkMongoliaOnly(req, res, next) {
   }
 }
 
-module.exports = checkMongoliaOnly;
+export defaultcheckMongoliaOnly;

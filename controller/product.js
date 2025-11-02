@@ -1,8 +1,7 @@
-const asyncHandler = require("../middleware/asyncHandle");
-const MyError = require("../utils/myError");
-const paginateSequelize = require("../utils/paginate-sequelize");
-
-exports.createProduct = asyncHandler(async (req, res, next) => {
+import asyncHandler from "../middleware/asyncHandle.js";
+import MyError from "../utils/myError.js";
+import paginateSequelize from "../utils/paginate-sequelize.js";
+export const createProduct = asyncHandler(async (req, res, next) => {
     const { userId } = req
     if (!userId) {
         throw new MyError(`Та эрхгүй байна`, 400)
@@ -14,7 +13,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
     });
 })
 
-exports.getProducts = asyncHandler(async (req, res, next) => {
+export const getProducts = asyncHandler(async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 1000;
     const sort = req.query.sort;
@@ -62,7 +61,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
         },
     });
 });
-exports.getProduct = asyncHandler(async (req, res, next) => {
+export const getProduct = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const product = await req.db.product.findByPk(id, {
         include: [{
@@ -78,7 +77,7 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
         body: product,
     });
 });
-exports.updateProduct = asyncHandler(async (req, res, next) => {
+export const updateProduct = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     // 1️⃣ Тухайн бүтээгдэхүүнийг олно
@@ -99,7 +98,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.deleteProduct = asyncHandler(async (req, res, next) => {
+export const deleteProduct = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
     // 1️⃣ Тухайн бүтээгдэхүүнийг олно
@@ -118,7 +117,7 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
         message: "Бүтээгдэхүүн амжилттай устгагдлаа",
     });
 });
-exports.getProductStats = asyncHandler(async (req, res, next) => {
+export const getProductStats = asyncHandler(async (req, res, next) => {
   const { userId } = req
   if (!userId) {
     throw new MyError(`Та эрхгүй байна`, 400)

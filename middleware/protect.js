@@ -1,8 +1,7 @@
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("./asyncHandle");
-const MyError = require("../utils/myError");
-
-exports.protect = asyncHandler(async (req, res, next) => {
+import jwt from "jsonwebtoken";
+import asyncHandler from "./asyncHandle.js";
+import MyError from "../utils/myError.js";
+export const protect = asyncHandler(async (req, res, next) => {
   if (!req.headers.authorization) {
     throw new MyError(
       "Энэ үйлдлийг хийхэд таны эрх хүрэхгүй байна. Та эхлээд логин хийнэ үү. Authorization header-ээр токеноо дамжуулна уу.",
@@ -25,7 +24,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
-exports.authorize = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.role)) {
       throw new MyError(

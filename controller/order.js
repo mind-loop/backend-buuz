@@ -1,11 +1,10 @@
-const { Op, Sequelize } = require("sequelize");
-const asyncHandler = require("../middleware/asyncHandle")
-const MyError = require("../utils/myError");
-const paginateSequelize = require("../utils/paginate-sequelize");
-const { includes } = require("lodash");
-const { model } = require("mongoose");
+import SequelizePkg from "sequelize";
+const { Op, Sequelize } = SequelizePkg;
+import asyncHandler from "../middleware/asyncHandle.js";
+import MyError from "../utils/myError.js";
+import paginateSequelize from "../utils/paginate-sequelize.js";
 // createOrders=>Items
-exports.createOrder = asyncHandler(async (req, res, next) => {
+export const createOrder = asyncHandler(async (req, res, next) => {
   const { userId } = req;
   if (!userId) {
     throw new MyError("Та эрхгүй байна", 400);
@@ -92,7 +91,7 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.statusChangeOrder = asyncHandler(async (req, res, next) => {
+export const statusChangeOrder = asyncHandler(async (req, res, next) => {
   const { orderId, status } = req.body;
   if (!orderId || !status) {
     throw new MyError("orderId болон status заавал шаардлагатай", 400);
@@ -112,7 +111,7 @@ exports.statusChangeOrder = asyncHandler(async (req, res, next) => {
 });
 
 //Энэ нь тухайн захиалагчийн сагсанд байгааг items-г энийгээр дуудаж харуулна. 
-exports.getOrderBasket = asyncHandler(async (req, res, next) => {
+export const getOrderBasket = asyncHandler(async (req, res, next) => {
   const { userId } = req
   if (!userId) {
     throw new MyError(`Та эрхгүй байна`, 400)
@@ -136,7 +135,7 @@ exports.getOrderBasket = asyncHandler(async (req, res, next) => {
 })
 
 // Төлөгдөөгүй
-exports.getStatus = asyncHandler(async (req, res, next) => {
+export const getStatus = asyncHandler(async (req, res, next) => {
   const { userId } = req
   console.log(req.role)
   if (!userId) {
@@ -162,7 +161,7 @@ exports.getStatus = asyncHandler(async (req, res, next) => {
   });
 })
 // Төлөгдөөгүй
-exports.getStats = asyncHandler(async (req, res, next) => {
+export const getStats = asyncHandler(async (req, res, next) => {
   const { userId } = req
   if (!userId) {
     throw new MyError(`Та эрхгүй байна`, 400)
@@ -194,7 +193,7 @@ exports.getStats = asyncHandler(async (req, res, next) => {
     body: statsObj,
   });
 })
-exports.getOrders = asyncHandler(async (req, res, next) => {
+export const getOrders = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort;
@@ -240,7 +239,7 @@ exports.getOrders = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getOrder = asyncHandler(async (req, res, next) => {
+export const getOrder = asyncHandler(async (req, res, next) => {
   const { userId } = req
   if (!userId) {
     throw new MyError(`Та эрхгүй байна`, 400)
@@ -268,7 +267,7 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
   });
 })
 
-exports.removeOrderItem = asyncHandler(async (req, res, next) => {
+export const removeOrderItem = asyncHandler(async (req, res, next) => {
   const { userId } = req;
   const { id } = req.params; // order_item ID
 

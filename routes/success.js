@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 router.route("/").get((req, res) => {
   res.status(200).json({
@@ -10,4 +10,4 @@ router.route("/").get((req, res) => {
     success: true,
   });
 });
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+import  { Op } from "sequelize";
 function adjustToUTCPlus8(date) {
     const currentTime = date.getTime();
     const timeInUTCPlus8 = currentTime + (8 * 60 * 60 * 1000);
@@ -19,4 +19,4 @@ async function expiredCheckDepartments({ db }) {
         console.error("❌ expiredCheckDepartments алдаа:", error);
     }
 }
-module.exports = { expiredCheckDepartments };
+export default{ expiredCheckDepartments };

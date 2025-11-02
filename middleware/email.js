@@ -1,5 +1,5 @@
-const axios = require("axios");
-const MyError = require("../utils/myError");
+import axios from "axios";
+import MyError from "../utils/myError.js";
 
 const CDN_URL = process.env.CDN_URL || "https://cdn.itwork.mn/api";
 

@@ -1,10 +1,11 @@
-const asyncHandler = require("express-async-handler");
-const paginate = require("../utils/paginate-sequelize");
-const MyError = require("../utils/myError");
-const bcrypt = require("bcrypt");
-const { sendHtmlEmail } = require("../middleware/email");
-const { generateLengthPass } = require("../utils/common");
-exports.getUsers = asyncHandler(async (req, res, next) => {
+import asyncHandler from "express-async-handler";
+import paginate from "../utils/paginate-sequelize.js";
+import MyError from "../utils/myError.js";
+import bcrypt from "bcrypt";
+import { sendHtmlEmail } from "../middleware/email.js";
+import { generateLengthPass } from "../utils/common.js";
+
+export const getUsers = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort;
@@ -45,7 +46,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.signUp = asyncHandler(async (req, res, next) => {
+export const signUp = asyncHandler(async (req, res, next) => {
   const counter = await req.db.users.findAll()
   if (counter.length > 0) {
     res.status(200).json({
@@ -76,7 +77,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.signIn = asyncHandler(async (req, res, next) => {
+export const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     throw new MyError("Имейл эсвэл нууц үгээ оруулна уу", 400);
@@ -98,7 +99,7 @@ exports.signIn = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.userInfo = asyncHandler(async (req, res, next) => {
+export const userInfo = asyncHandler(async (req, res, next) => {
   const { userId } = req;
 
   const user = await req.db.users.findOne({
@@ -115,7 +116,7 @@ exports.userInfo = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.updateUserInfo = asyncHandler(async (req, res, next) => {
+export const updateUserInfo = asyncHandler(async (req, res, next) => {
   const { userId } = req;
   if (req.body.password) {
     delete req.body.password;
@@ -130,7 +131,7 @@ exports.updateUserInfo = asyncHandler(async (req, res, next) => {
   });
 })
 
-exports.removeUser = asyncHandler(async (req, res, next) => {
+export const removeUser = asyncHandler(async (req, res, next) => {
   const userId = req.params.id;
   const user = await req.db.users.findByPk(userId);
   if (!user) {
@@ -144,7 +145,7 @@ exports.removeUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.changePassword = asyncHandler(async (req, res, next) => {
+export const changePassword = asyncHandler(async (req, res, next) => {
   const id = req.userId;
   if (!id) {
     throw new MyError("Id олдсонгүй!", 400);
@@ -175,7 +176,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
     body: { success: true },
   });
 });
-exports.forgotPassword = asyncHandler(async (req, res, next) => {
+export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   const password = generateLengthPass(8)
   if (!email) {

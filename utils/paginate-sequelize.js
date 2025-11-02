@@ -1,4 +1,4 @@
-module.exports = async function (page, limit, model, where = {}) { 
+export default async function (page, limit, model, where = {}) { 
   // filter-ийг count-д оруулах
   const total = await model.count({ where });
   const pageCount = Math.ceil(total / limit);

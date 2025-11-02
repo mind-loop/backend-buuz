@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { protect, authorize } = require("../middleware/protect");
-const { getOrderBasket, createOrder, statusChangeOrder, getStatus, getOrders, getOrder, removeOrderItem, getStats } = require("../controller/order");
+import { protect, authorize } from"../middleware/protect.js";
+import { getOrderBasket, createOrder, statusChangeOrder, getStatus, getOrders, getOrder, removeOrderItem, getStats } from "../controller/order.js";
 router.route("/basket").get(protect, getOrderBasket);
 router.route("/").post(protect, createOrder).get(protect,authorize("admin"),getOrders);
 router.route("/change-status").put(protect, statusChangeOrder);
 router.route("/status").post(protect, getStatus);
 router.route("/stats").get(protect,authorize("admin"), getStats);
 router.route("/:id").get(protect, getOrder).delete(protect, removeOrderItem)
-module.exports = router;
+export default router;

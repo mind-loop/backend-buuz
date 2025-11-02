@@ -1,14 +1,14 @@
-const asyncHandler = require("express-async-handler");
-const paginate = require("../utils/paginate-sequelize");
-const MyError = require("../utils/myError");
-const bcrypt = require("bcrypt");
-const { sendHtmlEmail } = require("../middleware/email");
-const { generateLengthPass } = require("../utils/common");
+import asyncHandler from "express-async-handler";
+import paginate from "../utils/paginate-sequelize.js";
+import MyError from "../utils/myError.js";
+import bcrypt from "bcrypt";
+import { sendHtmlEmail } from "../middleware/email.js";
+import { generateLengthPass } from "../utils/common.js";
 
 // =====================
 //  Бүх харилцагч жагсаах
 // =====================
-exports.getClients = asyncHandler(async (req, res, next) => {
+export const getClients = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 100;
   const sort = req.query.sort;
@@ -38,7 +38,7 @@ exports.getClients = asyncHandler(async (req, res, next) => {
     },
   });
 });
-exports.getClient = asyncHandler(async (req, res, next) => {
+export const getClient = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const clients = await req.db.clients.findByPk(id,{
       include: [{
@@ -61,7 +61,7 @@ exports.getClient = asyncHandler(async (req, res, next) => {
 // =====================
 //  Бүртгүүлэх (Sign Up)
 // =====================
-exports.signUp = asyncHandler(async (req, res, next) => {
+export const signUp = asyncHandler(async (req, res, next) => {
   const client = await req.db.clients.create({ ...req.body });
   if (!client) throw new MyError("Бүртгэл амжилтгүй боллоо", 400);
 
@@ -85,7 +85,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
 // =====================
 //  Нэвтрэх (Sign In)
 // =====================
-exports.signIn = asyncHandler(async (req, res, next) => {
+export const signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
     throw new MyError("Имэйл болон нууц үгээ оруулна уу", 400);
@@ -105,7 +105,7 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // =====================
 //  Хэрэглэгчийн мэдээлэл
 // =====================
-exports.clientInfo = asyncHandler(async (req, res, next) => {
+export const clientInfo = asyncHandler(async (req, res, next) => {
   const { userId } = req;
   const client = await req.db.clients.findByPk(userId);
   if (!client) throw new MyError("Таны бүртгэл олдсонгүй", 404);
@@ -119,7 +119,7 @@ exports.clientInfo = asyncHandler(async (req, res, next) => {
 // =====================
 //  Хэрэглэгчийн мэдээлэл шинэчлэх
 // =====================
-exports.updateClientInfo = asyncHandler(async (req, res, next) => {
+export const updateClientInfo = asyncHandler(async (req, res, next) => {
   const { userId } = req;
   if (req.body.password) delete req.body.password;
 
@@ -134,7 +134,7 @@ exports.updateClientInfo = asyncHandler(async (req, res, next) => {
 // =====================
 //  Хэрэглэгч устгах
 // =====================
-exports.removeClient = asyncHandler(async (req, res, next) => {
+export const removeClient = asyncHandler(async (req, res, next) => {
   const clientId = req.params.id;
   const client = await req.db.clients.findByPk(clientId);
   if (!client)
@@ -151,7 +151,7 @@ exports.removeClient = asyncHandler(async (req, res, next) => {
 // =====================
 //  Нууц үг солих
 // =====================
-exports.changePassword = asyncHandler(async (req, res, next) => {
+export const changePassword = asyncHandler(async (req, res, next) => {
   const id = req.userId;
   if (!id) throw new MyError("ID олдсонгүй", 400);
 
@@ -178,7 +178,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.forgotPassword = asyncHandler(async (req, res, next) => {
+export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   const password = generateLengthPass(8)
   if (!email) {
@@ -205,7 +205,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   };
   await sendHtmlEmail({ ...emailBody })
 
-  await req.db.clients.update(
+  await req.db.users.update(
     { password: new_password },
     {
       where: {
