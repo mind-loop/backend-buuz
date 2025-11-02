@@ -205,7 +205,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   };
   await sendHtmlEmail({ ...emailBody })
 
-  await req.db.users.update(
+  await req.db.clients.update(
     { password: new_password },
     {
       where: {
