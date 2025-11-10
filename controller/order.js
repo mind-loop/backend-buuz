@@ -311,3 +311,13 @@ export const removeOrderItem = asyncHandler(async (req, res, next) => {
   });
 });
 
+export const removeOrder = asyncHandler(async (req, res, next) => {
+  const order = await req.db.orders.findByPk(req.params.id)
+    if (!order) {
+      throw new MyError("Захиалга олдсонгүй",404)
+  }
+  await order.destroy()
+  res.status(200).json({
+    success: true,
+  });
+})
